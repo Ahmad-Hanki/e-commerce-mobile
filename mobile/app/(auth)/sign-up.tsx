@@ -1,34 +1,39 @@
 import { Controller, useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
-import { View, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { View, Platform, KeyboardAvoidingView, ScrollView, ActivityIndicator } from 'react-native';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { InputSchema, Input as SchemeInput } from '@/services/authentication';
+import { SignUpInputScheme, SignInScheme, useSignUp } from '@/services/authentication';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { Text } from '@/components/ui/text';
 
 const SignIn = () => {
+  const router = useRouter();
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<SchemeInput>({
-    resolver: zodResolver(InputSchema),
+  } = useForm<SignUpInputScheme>({
+    resolver: zodResolver(SignUpInputScheme),
     defaultValues: {
       email: '',
       password: '',
+      name: '',
     },
   });
 
-  const onSubmit = (data: SchemeInput) => {
-    console.log(data);
+  const { mutate, isPending } = useSignUp({
+    mutationConfig: {
+      onSuccess: () => {
+        router.replace('/(tabs)/home');
+      },
+    },
+  });
+
+  const onSubmit = (data: SignUpInputScheme) => {
+    mutate({ data });
   };
 
   return (
@@ -47,6 +52,25 @@ const SignIn = () => {
             <CardTitle>Sign Up Form</CardTitle>
           </CardHeader>
           <CardContent className="mx-auto w-full max-w-md p-4">
+            <View className="gap-2">
+              <Label className="text-base font-medium">Name</Label>
+              <Controller
+                control={control}
+                name="name"
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    placeholder="John Doe"
+                    value={value}
+                    onBlur={onBlur}
+                    onChangeText={onChange}
+                    keyboardType="default"
+                    autoCapitalize="words"
+                    className="w-full"
+                  />
+                )}
+              />
+              {errors.name && <Label className="text-sm text-red-500">{errors.name.message}</Label>}
+            </View>
             <View className="gap-2">
               <Label className="text-base font-medium">Email</Label>
               <Controller
@@ -93,7 +117,7 @@ const SignIn = () => {
 
             <View className="mt-4">
               <Button onPress={handleSubmit(onSubmit)} className="w-full">
-                <Text className="font-medium">Sign Up</Text>
+                {isPending ? <ActivityIndicator /> : <Text className="font-medium">Sign Up</Text>}
               </Button>
             </View>
           </CardContent>

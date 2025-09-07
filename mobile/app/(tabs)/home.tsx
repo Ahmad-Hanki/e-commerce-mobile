@@ -1,11 +1,11 @@
-import { Text } from '@/components/ui/text';
+import { Label } from '@/components/ui/label';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 const Home = () => {
   return (
     <View>
-      <Text className="text-lg">Home Screen</Text>
+      <Label className="text-lg">Home Screen</Label>
     </View>
   );
 };

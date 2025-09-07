@@ -2,7 +2,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { View, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { InputSchema, Input as SchemeInput } from '@/services/authentication';
+import { SignInScheme, SignInInputScheme } from '@/services/authentication';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -21,15 +21,15 @@ const SignIn = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<SchemeInput>({
-    resolver: zodResolver(InputSchema),
+  } = useForm<SignInInputScheme>({
+    resolver: zodResolver(SignInScheme),
     defaultValues: {
       email: '',
       password: '',
     },
   });
 
-  const onSubmit = (data: SchemeInput) => {
+  const onSubmit = (data: SignInInputScheme) => {
     console.log(data);
   };
 

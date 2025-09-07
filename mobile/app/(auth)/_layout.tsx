@@ -1,7 +1,13 @@
-import {  Slot } from 'expo-router';
+import { auth } from '@/config/firebaseConfig';
+import { Redirect, Slot } from 'expo-router';
 import React from 'react';
 
 const AuthLayout = () => {
+  const user = auth.currentUser;
+  if (!user) {
+    <Redirect href="/(tabs)/home" />;
+  }
+
   return <Slot />;
 };
 

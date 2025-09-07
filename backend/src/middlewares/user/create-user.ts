@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 import { prisma } from "../../config/prisma";
 
 export const createUser = async (req: Request, res: Response) => {
-  const { email, name, firebaseUid } = await req.body; 
+  console.log("Creating user...");
+  const { email, name, firebaseUid } = await req.body;
 
   if (!email || !name || !firebaseUid) {
     return res.status(400).json({ message: "Bad request" });

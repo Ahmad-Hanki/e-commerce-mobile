@@ -20,7 +20,7 @@ interface ApiErrorResponse {
 type ApiError = AxiosError<ApiErrorResponse>;
 
 const apiClient = axios.create({
-  baseURL: process.env.API_URL,
+  baseURL: process.env.EXPO_PUBLIC_API_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -31,6 +31,8 @@ const apiClient = axios.create({
 // Request interceptor to add auth token
 apiClient.interceptors.request.use(
   async (config) => {
+    const fullUrl = `${config.baseURL}${config.url}`;
+    console.log('[Axios Request] Full URL:', fullUrl);
     // If requireAuth is true, add Firebase token to headers
     if (config.requireAuth) {
       try {
