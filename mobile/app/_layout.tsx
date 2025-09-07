@@ -2,6 +2,7 @@ import SafeScreen from '@/components/ui/safe-screen';
 import '@/global.css';
 
 import { NAV_THEME } from '@/lib/theme';
+import { AppProvider } from '@/providers/app-provider';
 import { ThemeProvider } from '@react-navigation/native';
 import { PortalHost } from '@rn-primitives/portal';
 import { Slot, Stack } from 'expo-router';
@@ -17,12 +18,14 @@ export default function RootLayout() {
   const { colorScheme } = useColorScheme();
 
   return (
-    <SafeScreen>
-      <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
-        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-        <Slot screenOptions={{ headerShown: false }} />
-        <PortalHost />
-      </ThemeProvider>
-    </SafeScreen>
+    <AppProvider>
+      <SafeScreen>
+        <ThemeProvider value={NAV_THEME[colorScheme ?? 'light']}>
+          <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+          <Slot screenOptions={{ headerShown: false }} />
+          <PortalHost />
+        </ThemeProvider>
+      </SafeScreen>
+    </AppProvider>
   );
 }

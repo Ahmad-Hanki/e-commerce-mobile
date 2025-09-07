@@ -7,8 +7,6 @@ import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -46,7 +44,7 @@ const SignIn = () => {
         <Card className="w-full max-w-sm">
           {/* Email */}
           <CardHeader className="px-4">
-            <CardTitle>Sign In Form</CardTitle>
+            <CardTitle>Sign Up Form</CardTitle>
           </CardHeader>
           <CardContent className="mx-auto w-full max-w-md p-4">
             <View className="gap-2">
@@ -95,14 +93,14 @@ const SignIn = () => {
 
             <View className="mt-4">
               <Button onPress={handleSubmit(onSubmit)} className="w-full">
-                <Text className="font-medium">Sign In</Text>
+                <Text className="font-medium">Sign Up</Text>
               </Button>
             </View>
           </CardContent>
           <View className="flex-row gap-2">
-            <Label className="pl-4">Don't have an account?</Label>
-            <Link href="/(auth)/sign-up" asChild>
-              <Label className="font-medium text-muted-foreground">Sign Up</Label>
+            <Label className="pl-4">Already have an account?</Label>
+            <Link asChild href="/(auth)/sign-in">
+              <Label className="font-medium text-muted-foreground">Sign In</Label>
             </Link>
           </View>
         </Card>
