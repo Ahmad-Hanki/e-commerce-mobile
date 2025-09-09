@@ -1,15 +1,13 @@
-import { Label } from '@/components/ui/label';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
+import Categories from '../../components/home/categories';
 
 const Home = () => {
   return (
     <View>
-      <Label className="text-lg">Home Screen</Label>
+      <Categories />
     </View>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default Home;

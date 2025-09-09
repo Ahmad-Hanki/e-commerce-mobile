@@ -1,22 +1,16 @@
 import { Controller, useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
-import { View, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { View, Platform, KeyboardAvoidingView, ScrollView, ActivityIndicator } from 'react-native';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SignInScheme, SignInInputScheme } from '@/services/authentication';
+import { SignInScheme, SignInInputScheme, useLogin } from '@/services/authentication';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { Text } from '@/components/ui/text';
 
 const SignIn = () => {
+  const router = useRouter();
   const {
     control,
     handleSubmit,
@@ -29,8 +23,16 @@ const SignIn = () => {
     },
   });
 
+  const { mutate, isPending } = useLogin({
+    mutationConfig: {
+      onSuccess: () => {
+        router.replace('/(tabs)/home');
+      },
+    },
+  });
+
   const onSubmit = (data: SignInInputScheme) => {
-    console.log(data);
+    mutate({ data });
   };
 
   return (
@@ -95,7 +97,7 @@ const SignIn = () => {
 
             <View className="mt-4">
               <Button onPress={handleSubmit(onSubmit)} className="w-full">
-                <Text className="font-medium">Sign In</Text>
+                {isPending ? <ActivityIndicator /> : <Text>Sign In</Text>}
               </Button>
             </View>
           </CardContent>

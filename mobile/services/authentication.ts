@@ -1,10 +1,11 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { queryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { email, z } from 'zod';
 import { auth } from '@/config/firebaseConfig';
-import { MutationConfig } from '@/lib/react-query';
+import { MutationConfig, QueryConfig } from '@/lib/react-query';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { Alert } from 'react-native';
 import apiClient from '@/lib/api-client';
+import { User } from '@/types/api-types';
 
 export const SignInScheme = z.object({
   email: email({ message: 'Invalid email address' }),
@@ -17,7 +18,8 @@ export const Login = async ({ data }: { data: SignInInputScheme }) => {
   try {
     await signInWithEmailAndPassword(auth, data.email, data.password);
   } catch (error) {
-    console.error(error);
+    Alert.alert('Error logging in');
+    throw error;
   }
 };
 
@@ -32,9 +34,9 @@ export const useLogin = ({ mutationConfig }: UseLoginOptions = {}) => {
 
   return useMutation({
     onSuccess: (...args) => {
-      //   queryClient.invalidateQueries({
-      //     queryKey: getDiscussionsQueryOptions().queryKey,
-      //   });
+      queryClient.invalidateQueries({
+        queryKey: getUserQueryOptions().queryKey,
+      });
       onSuccess?.(...args);
     },
     ...restConfig,
@@ -64,8 +66,8 @@ export const SignUp = async ({ data }: { data: SignUpInputScheme }) => {
       Alert.alert('User created successfully');
     }
   } catch (error) {
-    console.error(error);
     Alert.alert('Error creating user');
+    throw error;
   }
 };
 type UseSignUpOptions = {
@@ -77,12 +79,37 @@ export const useSignUp = ({ mutationConfig }: UseSignUpOptions = {}) => {
   const { onSuccess, ...restConfig } = mutationConfig || {};
   return useMutation({
     onSuccess: (...args) => {
-      //   queryClient.invalidateQueries({
-      //     queryKey: getDiscussionsQueryOptions().queryKey,
-      //   });
+      queryClient.invalidateQueries({
+        queryKey: getUserQueryOptions().queryKey,
+      });
       onSuccess?.(...args);
     },
     ...restConfig,
     mutationFn: SignUp,
+  });
+};
+
+/////////////////////////////// get user ///////////////////////
+
+export const getUser = async (): Promise<{ user: User } | null> => {
+  const response = await apiClient.get('/user', { requireAuth: true });
+  return response.data;
+};
+
+export const getUserQueryOptions = () => {
+  return queryOptions({
+    queryKey: ['user'],
+    queryFn: () => getUser(),
+  });
+};
+
+type UseUserOptions = {
+  queryConfig?: QueryConfig<typeof getUserQueryOptions>;
+};
+
+export const useUser = ({ queryConfig }: UseUserOptions = {}) => {
+  return useQuery({
+    ...getUserQueryOptions(),
+    ...queryConfig,
   });
 };

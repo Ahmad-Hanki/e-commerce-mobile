@@ -2,7 +2,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { View, Platform, KeyboardAvoidingView, ScrollView, ActivityIndicator } from 'react-native';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SignUpInputScheme, SignInScheme, useSignUp } from '@/services/authentication';
+import { SignUpInputScheme, useSignUp } from '@/services/authentication';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';

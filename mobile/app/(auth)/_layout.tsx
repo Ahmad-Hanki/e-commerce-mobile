@@ -4,8 +4,9 @@ import React from 'react';
 
 const AuthLayout = () => {
   const user = auth.currentUser;
-  if (!user) {
-    <Redirect href="/(tabs)/home" />;
+
+  if (user) {
+    return <Redirect href="/(tabs)/home" />;
   }
 
   return <Slot />;

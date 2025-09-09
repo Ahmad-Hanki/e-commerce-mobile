@@ -19,7 +19,7 @@ export const createUser = async (req: Request, res: Response) => {
     });
 
     if (newUser) {
-      return res.status(201).json({ message: "User created", user: newUser });
+      return res.status(201).json({ message: "User created", data: newUser });
     }
   } catch (err) {
     console.error(err);
