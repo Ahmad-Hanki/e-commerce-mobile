@@ -5,11 +5,13 @@ import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import NavBar from '../navbar/nav-bar';
+import { useAuth } from '@/providers/auth-provider';
 
 const SafeScreen = ({ children }: { children: React.ReactNode }) => {
   const insets = useSafeAreaInsets();
   const { colorScheme } = useColorScheme();
-  const { isPending } = useUser();
+  const { user } = useAuth();
+  const { isPending } = useUser({ queryConfig: { enabled: !!user } });
 
   return (
     <View
@@ -21,7 +23,7 @@ const SafeScreen = ({ children }: { children: React.ReactNode }) => {
       }}>
       {!isPending ? (
         <>
-          <NavBar />
+          {user && <NavBar />}
           {children}
         </>
       ) : (

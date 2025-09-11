@@ -1,5 +1,6 @@
 // lib/apiClient.ts
 import { auth } from '@/config/firebaseConfig';
+import { signOutUser } from '@/services/authentication';
 import axios, { AxiosError } from 'axios';
 
 // Extend axios types with declaration merging
@@ -43,14 +44,14 @@ apiClient.interceptors.request.use(
           config.headers.Authorization = `Bearer ${token}`;
         } else {
           console.warn('requireAuth is true but no user is authenticated');
+          throw new Error('User not authenticated');
         }
       } catch (error) {
         const axiosError = error as ApiError;
 
         if (axiosError.response?.status === 401) {
-          // Token invalid or no user - redirect to login
+          await signOutUser();
           console.log('Please log in again');
-          // navigation.navigate('Login');
         } else if (axiosError.response?.status === 403) {
           // User doesn't have permission
           console.log('Access denied');
@@ -71,7 +72,7 @@ apiClient.interceptors.request.use(
 // Response interceptor for errors
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     const message = error.response?.data?.message || error.message || 'Something went wrong';
     console.error('API Error:', message);
 
@@ -79,6 +80,9 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401) {
       // You might want to redirect to login or refresh token here
       console.error('Authentication failed, redirecting to login...');
+
+      await signOutUser();
+      // Redirect to login screen logic here
     }
 
     return Promise.reject(error);

@@ -12,4 +12,6 @@ app.use("/api", categoriesRoutes);
 
 app.use(errorHandler);
 
+
+
 export default app;

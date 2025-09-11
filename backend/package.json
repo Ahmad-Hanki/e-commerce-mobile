@@ -31,6 +31,8 @@
     "@prisma/client": "^6.15.0",
     "@prisma/extension-accelerate": "^2.0.2",
     "firebase-admin": "^13.5.0",
+    "http": "^0.0.1-security",
+    "socket.io": "^4.8.1",
     "tsx": "^4.20.5"
   }
 }

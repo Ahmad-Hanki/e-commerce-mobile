@@ -89,6 +89,31 @@ export const useSignUp = ({ mutationConfig }: UseSignUpOptions = {}) => {
   });
 };
 
+/////////////////////////////// logout ///////////////////////
+export async function signOutUser() {
+  try {
+    await auth.signOut();
+    console.log('User signed out, tokens cleared');
+  } catch (error) {
+    console.error('Failed to sign out:', error);
+  }
+}
+
+export const useSignOut = ({ mutationConfig }: UseSignUpOptions = {}) => {
+  const queryClient = useQueryClient();
+  const { onSuccess, ...restConfig } = mutationConfig || {};
+  return useMutation({
+    onSuccess: (...args) => {
+      queryClient.invalidateQueries({
+        queryKey: getUserQueryOptions().queryKey,
+      });
+      onSuccess?.(...args);
+    },
+    ...restConfig,
+    mutationFn: signOutUser,
+  });
+};
+
 /////////////////////////////// get user ///////////////////////
 
 export const getUser = async (): Promise<{ user: User } | null> => {
